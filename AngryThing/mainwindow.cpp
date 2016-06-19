@@ -308,7 +308,7 @@ void MainWindow::ifcolliding(){
     {
         if(wbird->g_body->GetLinearVelocity().x==0){
             timer_collide->stop();
-            emit quitGame();
+            //emit quitGame();
         }
     }
 }
