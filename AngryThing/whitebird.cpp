@@ -26,9 +26,10 @@ whitebird::whitebird(float x, float y, float radius, QTimer *timer, QPixmap pixm
 
     // Bound timer
     connect(timer, SIGNAL(timeout()), this,SLOT(paint()));
-
-    scene->addItem(&g_pixmap);
+    launched=0;
     alreadyclicked=0;
+    scene->addItem(&g_pixmap);
+
 }
 
 void whitebird::setLinearVelocity(b2Vec2 velocity)

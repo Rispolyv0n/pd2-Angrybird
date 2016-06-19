@@ -26,7 +26,8 @@ yellowbird::yellowbird(float x, float y, float radius, QTimer *timer, QPixmap pi
 
     // Bound timer
     connect(timer, SIGNAL(timeout()), this,SLOT(paint()));
-
+    launched=0;
+    alreadyclicked=0;
     scene->addItem(&g_pixmap);
 }
 

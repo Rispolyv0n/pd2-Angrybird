@@ -93,6 +93,7 @@ void MainWindow::showEvent(QShowEvent *)
     timer_collide = new QTimer(this);
     connect(timer_collide, SIGNAL(timeout()), this, SLOT(ifcolliding()));
 
+
     showScore();
 }
 
@@ -120,12 +121,32 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     {
         // TODO : num=2 發射鳥鳥
         //std::cout << "Release !" << std::endl ;
-
         // Setting the Velocity 發射速度(Vx,Vy)
         if (redgenerated==1 && once==1){
             rbird->setLinearVelocity(b2Vec2(10,12)); // 10 12
+            rbird->launched=1;
             timer_collide->start();
             ++once;
+        }
+        switch(whichbird){
+        case 2:
+            if(bbird->launched==0){
+                bbird->setLinearVelocity(b2Vec2(7,12));
+                bbird->launched=1;
+            }
+            break;
+        case 3:
+            if(ybird->launched==0){
+                ybird->setLinearVelocity(b2Vec2(7,7));
+                ybird->launched=1;
+            }
+            break;
+        case 4:
+            if(wbird->launched==0){
+                wbird->setLinearVelocity(b2Vec2(15,10));
+                wbird->launched=1;
+            }
+            break;
         }
 
     }
@@ -143,7 +164,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     }
 
     // control blue bird generating more when pressing mouse !!!!!!!!NOT QUITE OKAY YET!!!!!!!!!
-    if(event->type() == QEvent::MouseButtonPress && b_once==0 && whichbird==2){
+    if(event->type() == QEvent::MouseButtonPress && b_once==0 && whichbird==2 && bbird->launched==1){
         a=new bluebird(bbird->g_body->GetPosition().x,bbird->g_body->GetPosition().y,0.2f,&timer,QPixmap(":/image/blue.png").scaled(height()/12.0,height()/12.0),world,scene);
         a->setLinearVelocity(b2Vec2(bbird->g_body->GetLinearVelocity().x,bbird->g_body->GetLinearVelocity().y+bbird->g_body->GetLinearVelocity().x));
         b=new bluebird(bbird->g_body->GetPosition().x,bbird->g_body->GetPosition().y,0.2f,&timer,QPixmap(":/image/blue.png").scaled(height()/12.0,height()/12.0),world,scene);
@@ -155,13 +176,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     }
 
     // control yellow bird accelerating when pressing mouse
-    if(event->type() == QEvent::MouseButtonPress && y_once==0 && whichbird==3){
+    if(event->type() == QEvent::MouseButtonPress && y_once==0 && whichbird==3 && ybird->launched==1){
         ybird->setLinearVelocity(b2Vec2(ybird->g_body->GetLinearVelocity().x*3,ybird->g_body->GetLinearVelocity().y*3));
         ++y_once; // only executing once
     }
 
     // control white bird laying an egg
-    if(event->type() == QEvent::MouseButtonPress && w_once==0 && whichbird==4){
+    if(event->type() == QEvent::MouseButtonPress && w_once==0 && whichbird==4 && wbird->launched==1){
         eggy=new egg(wbird->g_body->GetPosition().x,wbird->g_body->GetPosition().y-1,0.2f,&timer,QPixmap(":/image/egg.png").scaled(height()/12.0,height()/12.0),world,scene);
         eggy->setLinearVelocity(b2Vec2(1,-10));
         itemList.push_back(eggy);
@@ -178,18 +199,17 @@ void MainWindow::detect(){
         case 0:
             if(once==0){
                 generate_nextbird();
-                ++once;
             }
             break;
         case 1:
-            if(rbird->g_body->GetLinearVelocity().x==0){
+            if(rbird->g_body->GetLinearVelocity().x==0 && rbird->launched==1){
                 itemList.removeAll(rbird);
                 delete rbird;
                 generate_nextbird();
             }
             break;
         case 2:
-            if(bbird->g_body->GetLinearVelocity().x==0){
+            if(bbird->g_body->GetLinearVelocity().x==0 && bbird->launched==1){
                 itemList.removeAll(bbird);
                 delete bbird;
                 if (bbird->alreadyclicked==1){
@@ -202,14 +222,14 @@ void MainWindow::detect(){
             }
             break;
         case 3:
-            if(ybird->g_body->GetLinearVelocity().x==0){
+            if(ybird->g_body->GetLinearVelocity().x==0 && ybird->launched==1){
                 itemList.removeAll(ybird);
                 delete ybird;
                 generate_nextbird();
             }
             break;
         case 4:
-            if(wbird->g_body->GetLinearVelocity().x==0){
+            if(wbird->g_body->GetLinearVelocity().x==0 && wbird->launched==1){
                 itemList.removeAll(wbird);
                 delete wbird;
                 if(wbird->alreadyclicked==1){
@@ -229,21 +249,22 @@ void MainWindow::generate_nextbird(){
         case 0:
             rbird = new Bird(1.5f,8.5f,0.2f,&timer,QPixmap(":/bird.png").scaled(height()/12.0,height()/12.0),world,scene);
             itemList.push_back(rbird);
+            ++once;
             redgenerated=1;
             break;
         case 1:
             bbird=new bluebird(1.5f,8.5f,0.2f,&timer,QPixmap(":/image/blue.png").scaled(height()/12.0,height()/12.0),world,scene);
-            bbird->setLinearVelocity(b2Vec2(7,12));
+            //bbird->setLinearVelocity(b2Vec2(7,12));
             itemList.push_back(bbird);
             break;
         case 2:
             ybird=new yellowbird(1.5f,8.5f,0.2f,&timer,QPixmap(":/image/yellow.png").scaled(height()/11.0,height()/11.0),world,scene);
-            ybird->setLinearVelocity(b2Vec2(7,7));
+            //ybird->setLinearVelocity(b2Vec2(7,7));
             itemList.push_back(ybird);
             break;
         case 3:
             wbird=new whitebird(1.5f,8.5f,0.45f,&timer,QPixmap(":/image/white.png").scaled(height()/9.0,height()/9.0),world,scene);
-            wbird->setLinearVelocity(b2Vec2(15,10));
+            //wbird->setLinearVelocity(b2Vec2(15,10));
             itemList.push_back(wbird);
             break;
     }
@@ -287,7 +308,6 @@ void MainWindow::ifcolliding(){
     {
         if(wbird->g_body->GetLinearVelocity().x==0){
             timer_collide->stop();
-            //whichbird=10;
             emit quitGame();
         }
     }

@@ -16,14 +16,14 @@ public:
     static void setGlobalSize(QSizeF worldsize, QSizeF windowsize);
     b2Body *g_body;
     QGraphicsPixmapItem g_pixmap;
+    int launched;
+    int alreadyclicked;
 
 public slots:
     void paint();
     // TODO virtual void collide();
 
 protected:
-
-
     QSizeF g_size;
     b2World *g_world;
     static QSizeF g_worldsize, g_windowsize;

@@ -15,7 +15,7 @@ class whitebird : public GameItem
 public:
     whitebird(float x, float y, float radius, QTimer *timer, QPixmap pixmap, b2World *world, QGraphicsScene *scene);
     void setLinearVelocity(b2Vec2 velocity);
-    int alreadyclicked;
+    //int alreadyclicked;
 };
 
 #endif // WHITEBIRD_H

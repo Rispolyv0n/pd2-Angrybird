@@ -16,7 +16,7 @@ public:
     bluebird(float x, float y, float radius, QTimer *timer, QPixmap pixmap, b2World *world, QGraphicsScene *scene);
     void setLinearVelocity(b2Vec2 velocity);
     void morebird(b2World *world, QGraphicsScene *scene, int *once);
-    int alreadyclicked;
+    //int alreadyclicked;
 };
 
 #endif // BLUEBIRD_H

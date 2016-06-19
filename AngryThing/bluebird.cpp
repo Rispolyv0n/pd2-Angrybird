@@ -26,9 +26,10 @@ bluebird::bluebird(float x, float y, float radius, QTimer *timer, QPixmap pixmap
 
     // Bound timer
     connect(timer, SIGNAL(timeout()), this,SLOT(paint()));
-
-    scene->addItem(&g_pixmap);
+    launched=0;
     alreadyclicked=0;
+    scene->addItem(&g_pixmap);
+
 }
 
 void bluebird::setLinearVelocity(b2Vec2 velocity)
